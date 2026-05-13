@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  ews-bank:
+    build: .
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./logs:/app/logs
+    environment:
+      - HF_TOKEN=${HF_TOKEN}
+      - SPACE_ID=${SPACE_ID}
+    restart: unless-stopped

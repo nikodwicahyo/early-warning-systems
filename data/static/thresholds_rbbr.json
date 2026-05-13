@@ -1,0 +1,38 @@
+{
+  "_comment": "Threshold RBBR per rasio keuangan — sesuai Peraturan OJK",
+  "NPL": {
+    "pk1": {"max": 2.0},
+    "pk2": {"max": 5.0},
+    "pk3": {"max": 8.0},
+    "pk4": {"max": 12.0},
+    "pk5": {"min": 12.0}
+  },
+  "CAR": {
+    "pk1": {"min": 15.0},
+    "pk2": {"min": 12.0},
+    "pk3": {"min": 9.0},
+    "pk4": {"min": 6.0},
+    "pk5": {"max": 6.0}
+  },
+  "ROA": {
+    "pk1": {"min": 1.5},
+    "pk2": {"min": 1.25},
+    "pk3": {"min": 0.5},
+    "pk4": {"min": 0.0},
+    "pk5": {"max": 0.0}
+  },
+  "LDR": {
+    "pk1": {"min": 50.0, "max": 75.0},
+    "pk2": {"min": 75.0, "max": 85.0},
+    "pk3": {"min": 85.0, "max": 100.0},
+    "pk4": {"min": 100.0, "max": 120.0},
+    "pk5": {"min": 120.0}
+  },
+  "BOPO": {
+    "pk1": {"max": 70.0},
+    "pk2": {"max": 80.0},
+    "pk3": {"max": 90.0},
+    "pk4": {"max": 100.0},
+    "pk5": {"min": 100.0}
+  }
+}

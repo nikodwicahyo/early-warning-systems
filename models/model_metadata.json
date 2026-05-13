@@ -1,0 +1,53 @@
+{
+  "version": "1.0.0",
+  "trained_at": "2026-04",
+  "models": {
+    "tft": {
+      "file": "tft-epoch=00-val_loss=0.0507.ckpt",
+      "description": "Temporal Fusion Transformer \u2014 time-series forecasting"
+    },
+    "lgbm_reg": {
+      "file": "lgbm_reg_models.pkl",
+      "description": "LightGBM regressor \u2014 prediksi skor RBBR kontinu",
+      "features": "feat_cols.pkl"
+    },
+    "feat_cols": {
+      "file": "feat_cols.pkl",
+      "description": "Feature columns for LightGBM"
+    },
+    "np_bi_rate": {
+      "file": "np_bi_rate.pkl",
+      "description": "NeuralProphet \u2014 forecast bi_rate"
+    },
+    "np_inflasi": {
+      "file": "np_inflasi.pkl",
+      "description": "NeuralProphet \u2014 forecast inflasi"
+    },
+    "np_kurs_usd": {
+      "file": "np_kurs_usd.pkl",
+      "description": "NeuralProphet \u2014 forecast kurs_usd"
+    },
+    "sarimax_fc": {
+      "file": "sarimax_fc.pkl",
+      "description": "SARIMAX \u2014 per-bank per-rasio forecasting"
+    },
+    "sarimax": {
+      "file": "sarimax.pkl",
+      "description": "SARIMAX \u2014 aggregated forecasting"
+    }
+  },
+  "data_sources": {
+    "predictions": "data/predictions/forecast_6m.parquet",
+    "master_panel": "data/processed/master_panel.parquet",
+    "bank_metadata": "data/static/bank_metadata.csv",
+    "thresholds": "data/static/thresholds_rbbr.json"
+  },
+  "last_train_date": "2026-04-22",
+  "data_points": 51,
+  "models_fine_tuned": [
+    "lightgbm",
+    "sarimax",
+    "neuralprophet",
+    "tft"
+  ]
+}

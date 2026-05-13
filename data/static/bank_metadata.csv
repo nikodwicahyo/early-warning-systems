@@ -1,0 +1,5 @@
+kode_bank, nama_bank, kategori_buku, kepemilikan
+002, BRI, BUK.01, PERSERO
+008, MANDIRI, BUK.01, PERSERO
+009, BNI, BUK.01, PERSERO
+200, BTN, BUK.01, PERSERO

@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+venv/
+env/
+ENV/
+build/
+dist/
+*.egg-info/
+.coverage
+.pytest_cache/
+
+# Streamlit secrets (JANGAN di-commit!)
+.streamlit/secrets.toml
+
+# Large model files — upload manual via HF Hub UI atau huggingface-cli
+models/*.pkl
+models/*.pth
+models/*.pt
+models/*.ckpt
+models/*.bak
+
+# Data files — upload manual via HF Hub UI
+data/processed/*.parquet
+data/processed/*.csv
+data/predictions/*.parquet
+data/macro_forecast/*.parquet
+data/uploads/
+
+# Training artifacts
+checkpoints/
+lightning_logs/
+scratch/
+
+# Temporary files
+*.tmp
+*.log
+logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

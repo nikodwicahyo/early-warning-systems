@@ -1,0 +1,516 @@
+/* OJK RBBR EWS - Premium Design System */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --primary: #b91c1c;
+    --primary-light: #ff6565;
+    --secondary: #f9c74f;
+    --danger: #d81010;
+    --success: #2d6a4f;
+    --bg-light: #f8f9fa;
+    --glass: rgba(255, 255, 255, 0.9);
+    
+    /* Spinner Tokens */
+    --spinner-size: 60px;
+    --spinner-size-lg: 100px;
+    --spinner-border: 3px;
+    --spinner-color: var(--primary);
+    --spinner-track: rgba(185,28,28,0.08);
+    --overlay-blur: blur(8px);
+    --skeleton-highlight: rgba(185,28,28,0.04);
+    --progress-height: 3px;
+    --progress-radius: 99px;
+}
+
+/* ============================================================
+   1. LAYOUT RESETS
+   ============================================================ */
+[data-testid="stHeader"]          { display: none; }
+[data-testid="stSidebarFooter"]   { display: none; }
+[data-testid="stSidebarNav"]      { display: none !important; }
+[data-testid="stAppViewContainer"]{ background-color: white; }
+
+.block-container {
+    padding-top: 0rem !important;
+    padding-bottom: 1rem !important;
+}
+
+/* Collapse the height=0 components.html iframe used for JS injection */
+iframe[height="0"], iframe[title="st.iframe"] {
+    display: block !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+}
+/* Collapse the stCustomComponentV1 wrapper around it */
+[data-testid="stCustomComponentV1"] {
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Collapse any div containing only the fixed nav elements */
+div:has(> #ews-nav-bar),
+div:has(> #ews-nav-spinner) {
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    border: none !important;
+    display: block !important;
+}
+
+/* Also ensure main content starts at top with no gap */
+[data-testid="stMain"] {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+section.main {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+[data-testid="stSidebarContent"],
+[data-testid="stSidebarUserContent"] {
+    padding-top: 0rem !important;
+    padding-bottom: 1rem !important;
+}
+[data-testid="stSidebar"] section:first-child { padding-top: 0rem !important; }
+
+/* ============================================================
+   2. SIDEBAR
+   ============================================================ */
+[data-testid="stSidebar"] {
+    background-color: var(--bg-light);
+    border-right: 1px solid #e0e0e0;
+}
+[data-testid="stSidebar"] img {
+    transition: transform 0.3s ease;
+    margin-top: 0rem !important;
+    margin-bottom: 1rem;
+}
+[data-testid="stSidebar"] img:hover { transform: scale(1.05); }
+
+/* ============================================================
+   3. GLOBAL INTERACTIVE ELEMENTS
+   ============================================================ */
+.stButton>button {
+    border-radius: 8px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+.stButton>button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(185, 28, 28, 0.2) !important;
+}
+
+/* ============================================================
+   4. METRIC CARDS
+   ============================================================ */
+div[data-testid="stMetric"], .metric-card {
+    background: var(--glass);
+    padding: 1rem !important;
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+div[data-testid="stMetric"]:hover, .metric-card:hover {
+    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+}
+.metric-card {
+    border-left: 4px solid var(--primary);
+}
+.metric-card.gradient {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+/* ============================================================
+   5. PAGE HEADERS
+   ============================================================ */
+.main-header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    padding: 2.5rem;
+    border-radius: 15px;
+    color: white;
+    box-shadow: 0 10px 30px rgba(185, 28, 28, 0.15);
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+.main-header h1 { color: white !important; margin-top: 0; }
+.main-header::after {
+    content: "";
+    position: absolute;
+    top: -50%; right: -10%;
+    width: 300px; height: 300px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+}
+
+/* ============================================================
+   6. BADGES & STATUS
+   ============================================================ */
+.badge-red, .badge-yellow, .badge-green {
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-block;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.badge-red    { background-color: var(--danger);  color: white; }
+.badge-yellow { background-color: var(--secondary); color: #212529; }
+.badge-green  { background-color: var(--success); color: white; }
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: inline-block;
+}
+.status-online { background: #dcfce7; color: #166534; }
+.status-offline { background: #fee2e2; color: #991b1b; }
+.status-ready { background: #d4edda; color: #155724; }
+.status-waiting { background: #fff3cd; color: #856404; }
+.status-error { background: #f8d7da; color: #721c24; }
+
+.ews-status-card {
+    padding: 1rem;
+    border-radius: 8px;
+    border-left: 4px solid currentColor;
+    margin-bottom: 0.5rem;
+}
+.ews-status-card.success { background: #d4edda; color: #155724; border-color: #28a745; }
+.ews-status-card.warning { background: #fff3cd; color: #856404; border-color: #ffc107; }
+.ews-status-card.error   { background: #f8d7da; color: #721c24; border-color: #dc3545; }
+
+/* ============================================================
+   7. SIDEBAR NAV ICON COLORS
+   ============================================================ */
+.nav-link i { color: var(--primary) !important; }
+.nav-link.active i,
+.nav-link.selected i,
+.nav-link-selected i,
+li.nav-item a.active i { color: white !important; }
+
+/* ============================================================
+   8. PREMIUM LOADING SYSTEM — STARTUP OVERLAY (ENHANCED)
+   ============================================================ */
+#ews-loader-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(255,255,255,0.97);
+    backdrop-filter: var(--overlay-blur);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000000;
+    animation: overlayFadeIn 0.3s ease-out;
+}
+
+#ews-loader-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+@keyframes overlayFadeIn { from { opacity: 0 } to { opacity: 1 } }
+
+.loader-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.loader-visual-wrap {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loader-ring {
+    position: absolute;
+    width: var(--spinner-size-lg);
+    height: var(--spinner-size-lg);
+    border-radius: 50%;
+    border: var(--spinner-border) solid var(--spinner-track);
+    border-top-color: var(--spinner-color);
+    animation: spinCW 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Logo Animations */
+.loader-logo-wrap {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loader-logo {
+    width: 70px;
+    height: auto;
+    filter: drop-shadow(0 5px 15px rgba(185, 28, 28, 0.1));
+    opacity: 0;
+    animation: logoPulse 2.5s ease-in-out infinite, logoFadeIn 0.6s ease-out 0.2s forwards;
+}
+
+@keyframes logoPulse {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 10px 20px rgba(185, 28, 28, 0.2)); }
+    50%       { transform: scale(1.08); filter: drop-shadow(0 15px 30px rgba(185, 28, 28, 0.3)); }
+}
+
+@keyframes logoFadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to   { opacity: 1; transform: scale(1);   }
+}
+
+.loader-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: center;
+    opacity: 0;
+    animation: logoFadeIn 0.5s ease-out 0.5s forwards;
+}
+
+.loader-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 0.5px;
+}
+
+.loader-subtitle {
+    font-size: 0.8rem;
+    color: #888;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Startup Progress Bar */
+.loader-progress-track {
+    width: 180px;
+    height: var(--progress-height);
+    background: rgba(185,28,28,0.1);
+    border-radius: var(--progress-radius);
+    overflow: hidden;
+    margin-top: 0.5rem;
+}
+
+.loader-progress-bar {
+    height: 100%;
+    width: 40%;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    border-radius: var(--progress-radius);
+    animation: progressPulse 1.6s cubic-bezier(0.4,0,0.2,1) infinite;
+}
+
+@keyframes progressPulse {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(350%); }
+}
+
+/* Retraining Progress variant */
+.ews-progress-track {
+    width: 100%;
+    height: var(--progress-height);
+    background: rgba(185,28,28,0.1);
+    border-radius: var(--progress-radius);
+    overflow: hidden;
+    margin-top: 0.5rem;
+}
+
+.ews-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    border-radius: var(--progress-radius);
+    transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Hide native Streamlit spinner — global nav loader handles page transitions */
+[data-testid="stSpinner"] { display: none !important; }
+
+/* ============================================================
+   9. PAGE TRANSITION SPINNER (inline, lightweight)
+   ============================================================ */
+.page-transition-overlay {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 0;
+    gap: 24px;
+    animation: loaderFadeIn 0.2s ease-out;
+}
+
+.page-spinner {
+    width: 44px; height: 44px;
+    border: 4px solid rgba(185, 28, 28, 0.15);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spinCW 0.8s linear infinite;
+}
+
+.page-spinner-text {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #555;
+    letter-spacing: 0.5px;
+}
+
+/* ============================================================
+   10. INLINE OPERATION SPINNER (.ews-spinner-wrap)
+   ============================================================ */
+.ews-spinner-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem 0;
+}
+.ews-spinner-wrap .loader-ring {
+    position: relative;
+    width: var(--spinner-size);
+    height: var(--spinner-size);
+    border-width: var(--spinner-border);
+    border-color: var(--spinner-track);
+    border-top-color: var(--spinner-color);
+}
+.ews-spinner-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #555;
+    letter-spacing: 0.3px;
+}
+
+/* ============================================================
+   11. PAGE ENTRANCE ANIMATION
+   ============================================================ */
+.main-content-fade {
+    animation: fadeInPage 0.4s ease-out forwards;
+}
+@keyframes fadeInPage {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0);   }
+}
+
+/* ============================================================
+   12. SKELETON LOADERS
+   ============================================================ */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, var(--skeleton-highlight, rgba(185,28,28,0.04)) 37%, #f0f0f0 63%);
+    background-size: 400% 100%;
+    border-radius: 6px;
+    animation: shimmer 1.4s infinite;
+}
+.skeleton-text   { height: 14px; margin-bottom: 8px; width: 100%; }
+.skeleton-title  { height: 24px; margin-bottom: 12px; width: 60%; }
+.skeleton-card   { height: 120px; border-radius: 12px; width: 100%; }
+.skeleton-metric { height: 80px; border-radius: 12px; width: 100%; }
+.skeleton-chart  { height: 300px; border-radius: 12px; width: 100%; }
+.skeleton-row    { height: 20px; border-radius: 4px; width: 100%; margin-bottom: 8px; }
+
+@keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ============================================================
+    13. NAVIGATION LOADER
+    ============================================================ */
+@keyframes spinCW {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#ews-nav-bar {
+    position: fixed; top: 0; left: 0; right: 0; height: 3px;
+    z-index: 999998; pointer-events: none;
+    background: linear-gradient(90deg, #b91c1c, #ff6565, #b91c1c);
+    background-size: 300% 100%;
+    opacity: 0; transition: opacity 0.2s ease;
+    animation: ewsNavSlide 1s linear infinite;
+}
+#ews-nav-bar.active { 
+    opacity: 1; 
+    box-shadow: 0 1px 6px rgba(185,28,28,0.4);
+}
+@keyframes ewsNavSlide { 
+    from { background-position: 200% 0 } 
+    to { background-position: -100% 0 } 
+}
+
+#ews-nav-spinner {
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 1000000; pointer-events: none;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.2s ease;
+    background: transparent;
+}
+#ews-nav-spinner.active { opacity: 1; }
+#ews-nav-spinner .loader-ring {
+    width: var(--spinner-size);
+    height: var(--spinner-size);
+    border-width: var(--spinner-border);
+    border-color: var(--spinner-track);
+    border-top-color: var(--spinner-color);
+}
+
+#ews-nav-label {
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, calc(-50% + 44px));
+    z-index: 1000000;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: #555;
+    letter-spacing: 0.5px;
+    opacity: 0; transition: opacity 0.2s ease;
+    pointer-events: none;
+    white-space: nowrap;
+}
+#ews-nav-label.active { opacity: 1; }
+
+/* ============================================================
+   14. PAGE-SPECIFIC COMPONENTS
+   ============================================================ */
+.retrain-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: transform 0.2s;
+}
+.retrain-button:hover {
+    transform: translateY(-2px);
+}
+
+/* ============================================================
+   15. FOOTER
+   ============================================================ */
+.app-footer {
+    text-align: center;
+    padding: 2rem;
+    color: #6c757d;
+    border-top: 1px solid #dee2e6;
+    margin-top: 3rem;
+}
