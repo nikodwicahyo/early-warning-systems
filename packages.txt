@@ -1,6 +1,3 @@
-# Required for LightGBM and some numerical libraries
 libomp-dev
 libgomp1
-
-# Optional: For better performance
 build-essential
