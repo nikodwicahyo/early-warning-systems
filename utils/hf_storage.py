@@ -14,40 +14,50 @@ import psutil
 from huggingface_hub import HfApi, login, hf_hub_download
 import streamlit as st
 
+# Default storage repository (Dataset repo, separate from Space)
+DEFAULT_STORAGE_REPO = "nikodwicahyo/EWS-DPKP-storage"
+
 class HFStorageManager:
     """
-    Manages data and model storage on Hugging Face Hub
+    Manages data and model storage on Hugging Face Hub.
+
+    Uses a separate HF Dataset repository (EWS-DPKP-storage) for persistent
+    model binaries and data files, keeping the Space repo lightweight.
     """
 
-    def __init__(self, repo_id: str, token: Optional[str] = None):
+    def __init__(
+        self,
+        repo_id: str = DEFAULT_STORAGE_REPO,
+        token: Optional[str] = None,
+        repo_type: str = "dataset",
+    ):
         """
         Initialize HF Storage Manager
 
         Args:
-            repo_id: HuggingFace repository ID (format: username/repo-name)
-            token: HF token (if None, will use st.secrets or env variable)
+            repo_id:   HuggingFace repository ID (username/repo-name).
+                       Defaults to the dedicated storage dataset repo.
+            token:     HF token with write access. If None, auto-resolved
+                       from st.secrets or HF_TOKEN env variable.
+            repo_type: "dataset" (default) for separate storage repos,
+                       "space" if pointing directly at a Space repo.
         """
-        self.repo_id = repo_id
+        self.repo_id   = repo_id
+        self.repo_type = repo_type  # "dataset" | "space" | "model"
 
         # Get token from multiple sources
         if token is None:
             token = self._get_token()
 
         self.token = token
-        self._api = None
+        self._api  = None
 
     @property
     def api(self):
-        """Get or create HfApi client"""
+        """Get or create HfApi client (lazy initialisation)"""
         if self._api is None:
             self._api = HfApi(token=self.token)
         return self._api
-
-        # Login to HF
-        try:
-            login(token=self.token, add_to_git_credential=False)
-        except Exception as e:
-            raise
 
     def _get_token(self) -> str:
         """
@@ -101,7 +111,7 @@ class HFStorageManager:
                 repo_id=self.repo_id,
                 token=self.token,
                 commit_message=commit_message,
-                repo_type="space"
+                repo_type=self.repo_type,
             )
 
             return url
@@ -145,7 +155,7 @@ class HFStorageManager:
                 repo_id=self.repo_id,
                 token=self.token,
                 commit_message=f"Update model: {model_name}",
-                repo_type="space"
+                repo_type=self.repo_type,
             )
 
             # Upload metadata if provided
@@ -166,7 +176,7 @@ class HFStorageManager:
                     repo_id=self.repo_id,
                     token=self.token,
                     commit_message=f"Update metadata: {model_name}",
-                    repo_type="space"
+                    repo_type=self.repo_type,
                 )
 
                 # Cleanup
@@ -197,8 +207,8 @@ class HFStorageManager:
                 repo_id=self.repo_id,
                 filename=repo_file_path,
                 token=self.token,
-                repo_type="space",
-                local_dir=local_path
+                repo_type=self.repo_type,
+                local_dir=local_path,
             )
 
             return downloaded_path
@@ -229,15 +239,15 @@ class HFStorageManager:
                 repo_id=self.repo_id,
                 filename=repo_file_path,
                 token=self.token,
-                repo_type="space"
+                repo_type=self.repo_type,
             )
-            
+
             # Ensure parent directory exists
             Path(local_file_path).parent.mkdir(parents=True, exist_ok=True)
-            
+
             # Copy to exact destination
             shutil.copy2(temp_path, local_file_path)
-            
+
             return True
 
         except Exception as e:
@@ -257,13 +267,13 @@ class HFStorageManager:
             files = self.api.list_repo_files(
                 repo_id=self.repo_id,
                 token=self.token,
-                repo_type="space"
+                repo_type=self.repo_type,
             )
 
             if path_prefix:
                 files = [f for f in files if f.startswith(path_prefix)]
 
-            return files
+            return list(files)
 
         except Exception as e:
             return []
@@ -291,8 +301,8 @@ class HFStorageManager:
                 path_in_repo=repo_file_path,
                 repo_id=self.repo_id,
                 token=self.token,
-                repo_type="space",
-                commit_message=commit_message
+                repo_type=self.repo_type,
+                commit_message=commit_message,
             )
             return True
         except Exception as e:
@@ -321,8 +331,8 @@ class HFStorageManager:
                 path_in_repo=folder_path,
                 repo_id=self.repo_id,
                 token=self.token,
-                repo_type="space",
-                commit_message=commit_message
+                repo_type=self.repo_type,
+                commit_message=commit_message,
             )
             return True
         except Exception as e:

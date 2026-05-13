@@ -1,15 +1,3 @@
----
-title: EWS Bank Persero
-emoji: 🏦
-colorFrom: blue
-colorTo: green
-sdk: streamlit
-sdk_version: 1.34.0
-app_file: app.py
-pinned: false
-license: mit
----
-
 # 🏦 OJK RBBR Early Warning System
 
 ![Python](https://img.shields.io/badge/python-3.10%2B-blue)
@@ -66,50 +54,70 @@ App tersedia di `http://localhost:8501`
 
 - Buka https://huggingface.co/new-space
 - SDK: **Streamlit**, visibility: Public/Private
-- Catat Space ID: `username/ews-bank-persero`
+- Catat Space ID: `USERNAME/SPACE_NAME`
 
 ### 2. Generate HF Token
 
 - Buka https://huggingface.co/settings/tokens
-- Buat token dengan scope **write**
+- Buat token baru dengan **Role: Write**
+- Simpan token (format: `hf_xxxxxxxxxxxxxxxxxxxx`)
 
 ### 3. Set Repository Secrets
 
 Di halaman Space → **Settings → Repository secrets**, tambahkan:
 
-| Key | Value |
-|-----|-------|
-| `HF_TOKEN` | Token HF dengan write access |
-| `SPACE_ID` | `username/ews-bank-persero` |
+| Key        | Value                          |
+| ---------- | ------------------------------ |
+| `HF_TOKEN` | Token HF dengan write access   |
+| `SPACE_ID` | `USERNAME/SPACE_NAME`        |
 
-### 4. Push ke Space
+### 4. Clone & Push ke Space
+
+> ⚠️ HF tidak lagi mendukung autentikasi password. Gunakan token di URL.
 
 ```bash
-# Clone Space repository
-git clone https://huggingface.co/spaces/USERNAME/SPACE_NAME
+# Step 1 — Clone Space repository (gunakan token di URL)
+git clone https://YOURUSERNAME:YOUR_HF_TOKEN@huggingface.co/spaces/USERNAME/SPACE_NAME
 cd SPACE_NAME
 
-# Copy semua file project (kecuali venv, __pycache__, .coverage)
-# Pastikan .gitignore sudah benar
+# Step 2 — Copy semua file project ke dalam folder Space
+# (kecuali: venv/, __pycache__/, .coverage, EWS-DPKP/)
+robocopy "YOUR_PROJECT_PATH" "YOUR_SPACE_PATH" /E /XD venv __pycache__ .git YOUR_SPACE_NAME /XF .coverage *.pyc
 
+# Step 3 — Commit & push ke HF Space
 git add .
-git commit -m "Initial deployment"
+git commit -m "chore: deploy EWS-DPKP initial release"
 git push
 ```
 
-### 5. Upload Models & Data
+> **Alternatif autentikasi:** Gunakan `huggingface-cli login` agar tidak perlu menyertakan token di setiap URL:
+> ```bash
+> pip install huggingface_hub
+> huggingface-cli login   # masukkan token saat diminta
+> git clone https://huggingface.co/spaces/nikodwicahyo/EWS-DPKP
+> ```
 
-Setelah Space running, gunakan halaman **Model Management** atau **Upload Data** di UI untuk mengunggah:
+### 5. Upload Models & Data ke HF Hub
 
-- `models/tft-retrained-*.ckpt`
-- `models/lgbm_reg_models.pkl`
-- `models/feat_cols.pkl`
-- `models/np_bi_rate.pkl`, `np_inflasi.pkl`, `np_kurs_usd.pkl`
-- `models/sarimax_fc.pkl`
-- `data/processed/master_panel.parquet`
-- `data/predictions/forecast_6m.parquet`
+Setelah Space running, gunakan halaman **Model Management** atau **Upload Data** di UI untuk mengunggah file-file berikut ke Hugging Face Dataset repository:
 
-> **Catatan:** File `sarimax_fc.pkl` (~312 MB) dan `sarimax.pkl` (~26 MB) cukup besar. Pastikan Space tier memiliki storage yang cukup, atau gunakan HF Dataset repository terpisah untuk file besar.
+| File | Keterangan |
+|------|------------|
+| `models/tft-retrained-*.ckpt` | TFT checkpoint (PyTorch Lightning) |
+| `models/lgbm_reg_models.pkl` | LightGBM regressor |
+| `models/lgbm_clf.pkl` | LightGBM classifier PK |
+| `models/feat_cols.pkl` | Feature columns |
+| `models/np_bi_rate.pkl` | NeuralProphet BI Rate |
+| `models/np_inflasi.pkl` | NeuralProphet Inflasi |
+| `models/np_kurs_usd.pkl` | NeuralProphet Kurs USD |
+| `models/sarimax_fc.pkl` | SARIMAX per-bank (~312 MB) |
+| `data/processed/master_panel.parquet` | Panel data historis |
+| `data/predictions/forecast_6m.parquet` | Hasil prediksi 6 bulan |
+
+> **Catatan penting:**
+> - File `sarimax_fc.pkl` (~312 MB) dan `sarimax.pkl` (~26 MB) melebihi batas LFS HF Spaces (1 GB total).
+> - Gunakan **HF Dataset repository** terpisah untuk file besar, lalu atur `SPACE_ID` di secrets.
+> - Jangan commit `models/` dan `data/` ke git Space — biarkan di-sync via HF Hub API saat runtime.
 
 ---
 
@@ -207,12 +215,12 @@ prediksi-bank-v4/
 
 **4-Model Ensemble:**
 
-| Model | Peran | File |
-|-------|-------|------|
-| **TFT** (Temporal Fusion Transformer) | Multi-horizon forecasting utama | `tft-retrained-*.ckpt` |
-| **LightGBM** | Regresi skor RBBR & klasifikasi PK | `lgbm_reg_models.pkl` |
-| **NeuralProphet** | Forecast variabel makro (BI rate, inflasi, kurs) | `np_*.pkl` |
-| **SARIMAX** | Per-bank per-rasio statistical forecasting | `sarimax_fc.pkl` |
+| Model                                 | Peran                                            | File                   |
+| ------------------------------------- | ------------------------------------------------ | ---------------------- |
+| **TFT** (Temporal Fusion Transformer) | Multi-horizon forecasting utama                  | `tft-retrained-*.ckpt` |
+| **LightGBM**                          | Regresi skor RBBR & klasifikasi PK               | `lgbm_reg_models.pkl`  |
+| **NeuralProphet**                     | Forecast variabel makro (BI rate, inflasi, kurs) | `np_*.pkl`             |
+| **SARIMAX**                           | Per-bank per-rasio statistical forecasting       | `sarimax_fc.pkl`       |
 
 **Current model version:** `1.1.0` (trained 2026-05-12)  
 **Forecast horizon:** 6 bulan ke depan (Sep 2026 – Feb 2027)
@@ -270,65 +278,6 @@ Konfigurasi threshold alert, warna PK, dan parameter model dapat diubah di sini.
 
 ---
 
-## 🐛 Troubleshooting
-
-**Models tidak ter-load**  
-→ Pastikan semua file `.pkl` dan `.ckpt` ada di `models/`. Cek `model_metadata.json` untuk nama file yang diharapkan.
-
-**`sarimax_fc.pkl` terlalu besar untuk di-push ke git**  
-→ Upload manual via HF Hub UI atau gunakan `huggingface-cli upload`. File ini di-exclude dari git via `.gitignore`.
-
-**HF authentication error**  
-→ Pastikan `HF_TOKEN` sudah di-set di Space secrets (bukan di `.streamlit/secrets.toml` yang tidak di-commit).
-
-**OOM saat retraining**  
-→ Kurangi batch size di halaman Retraining UI, atau upgrade Space hardware ke CPU Upgrade / GPU.
-
-**SHAP plots tidak muncul**  
-→ `shap==0.44.1` sudah ada di `requirements.txt`. Pastikan `lgbm_reg_models.pkl` ter-load dengan benar.
-
-**Data upload gagal**  
-→ Pastikan format kolom sesuai template. Gunakan `data/template_ews.csv` sebagai referensi.
-
----
-
-## 📈 Performance (Model v1.1.0)
-
-| Model | Metrik | Nilai |
-|-------|--------|-------|
-| TFT | Val Loss | 0.0833 |
-| NeuralProphet BI Rate | MAE | 0.121 |
-| NeuralProphet Inflasi | MAE | 0.420 |
-
----
-
-## 🚢 Docker (Opsional)
-
-```bash
-docker build -t ojk-rbbr-ews .
-docker run -p 8501:8501 \
-  -e HF_TOKEN=hf_xxx \
-  -e SPACE_ID=username/ews-bank-persero \
-  ojk-rbbr-ews
-```
-
----
-
-## ✅ Changelog
-
-### v1.1.0 (2026-05-12)
-- 🔄 Retraining dengan data terbaru (Feb–Apr 2026)
-- 🤖 Fine-tuning TFT, LightGBM, NeuralProphet, SARIMAX
-- 📊 Forecast horizon: Sep 2026 – Feb 2027
-
-### v1.0.0 (2026-04-21)
-- ✨ Initial release
-- 🎨 Multi-page dashboard
-- 📈 SHAP explainability
-- 🔄 Retraining UI dengan HF Hub integration
-
----
-
 ## 📝 License
 
 **Internal Use Only — OJK DPKP**  
@@ -336,4 +285,4 @@ Dilarang disebarluaskan tanpa izin.
 
 ---
 
-**Built with ❤️ for OJK DPKP** — _Protecting Indonesia's Banking System_
+**Built for OJK DPKP** — _Protecting Indonesia's Banking System_
