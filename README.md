@@ -177,34 +177,6 @@ Lihat `data/template_ews.csv` untuk format lengkap.
 
 ---
 
-## 🔧 Configuration
-
-### `.streamlit/config.toml`
-
-```toml
-[theme]
-primaryColor = "#003d82"
-backgroundColor = "#f8f9fa"
-textColor = "#212529"
-
-[server]
-maxUploadSize = 200
-port = 8501
-```
-
-### `.streamlit/secrets.toml` (lokal saja, jangan di-commit)
-
-```toml
-HF_TOKEN = "hf_xxxxxxxxxxxxxxxxxxxx"
-SPACE_ID  = "username/ews-bank-persero"
-```
-
-### `src/config.py`
-
-Konfigurasi threshold alert, warna PK, dan parameter model dapat diubah di sini.
-
----
-
 ## 📝 License
 
 **Internal Use Only — OJK DPKP**  
