@@ -144,7 +144,7 @@ prediksi-bank-v4/
 
 | Model                                 | Peran                                            | File                   |
 | ------------------------------------- | ------------------------------------------------ | ---------------------- |
-| **TFT** (Temporal Fusion Transformer) | Multi-horizon forecasting utama                  | `tft-retrained-*.ckpt` |
+| **TFT** (Temporal Fusion Transformer) | Multi-horizon forecasting                        | `tft-retrained-*.ckpt` |
 | **LightGBM**                          | Regresi skor RBBR & klasifikasi PK               | `lgbm_reg_models.pkl`  |
 | **NeuralProphet**                     | Forecast variabel makro (BI rate, inflasi, kurs) | `np_*.pkl`             |
 | **SARIMAX**                           | Per-bank per-rasio statistical forecasting       | `sarimax_fc.pkl`       |
