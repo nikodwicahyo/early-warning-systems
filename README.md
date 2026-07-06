@@ -48,79 +48,6 @@ App tersedia di `http://localhost:8501`
 
 ---
 
-## 🚢 Deploy ke Hugging Face Spaces
-
-### 1. Buat Space baru
-
-- Buka https://huggingface.co/new-space
-- SDK: **Streamlit**, visibility: Public/Private
-- Catat Space ID: `USERNAME/SPACE_NAME`
-
-### 2. Generate HF Token
-
-- Buka https://huggingface.co/settings/tokens
-- Buat token baru dengan **Role: Write**
-- Simpan token (format: `hf_xxxxxxxxxxxxxxxxxxxx`)
-
-### 3. Set Repository Secrets
-
-Di halaman Space → **Settings → Repository secrets**, tambahkan:
-
-| Key        | Value                          |
-| ---------- | ------------------------------ |
-| `HF_TOKEN` | Token HF dengan write access   |
-| `SPACE_ID` | `USERNAME/SPACE_NAME`        |
-
-### 4. Clone & Push ke Space
-
-> ⚠️ HF tidak lagi mendukung autentikasi password. Gunakan token di URL.
-
-```bash
-# Step 1 — Clone Space repository (gunakan token di URL)
-git clone https://YOURUSERNAME:YOUR_HF_TOKEN@huggingface.co/spaces/USERNAME/SPACE_NAME
-cd SPACE_NAME
-
-# Step 2 — Copy semua file project ke dalam folder Space
-# (kecuali: venv/, __pycache__/, .coverage, EWS-DPKP/)
-robocopy "YOUR_PROJECT_PATH" "YOUR_SPACE_PATH" /E /XD venv __pycache__ .git YOUR_SPACE_NAME /XF .coverage *.pyc
-
-# Step 3 — Commit & push ke HF Space
-git add .
-git commit -m "chore: deploy EWS-DPKP initial release"
-git push
-```
-
-> **Alternatif autentikasi:** Gunakan `huggingface-cli login` agar tidak perlu menyertakan token di setiap URL:
-> ```bash
-> pip install huggingface_hub
-> huggingface-cli login   # masukkan token saat diminta
-> git clone https://huggingface.co/spaces/nikodwicahyo/EWS-DPKP
-> ```
-
-### 5. Upload Models & Data ke HF Hub
-
-Setelah Space running, gunakan halaman **Model Management** atau **Upload Data** di UI untuk mengunggah file-file berikut ke Hugging Face Dataset repository:
-
-| File | Keterangan |
-|------|------------|
-| `models/tft-retrained-*.ckpt` | TFT checkpoint (PyTorch Lightning) |
-| `models/lgbm_reg_models.pkl` | LightGBM regressor |
-| `models/lgbm_clf.pkl` | LightGBM classifier PK |
-| `models/feat_cols.pkl` | Feature columns |
-| `models/np_bi_rate.pkl` | NeuralProphet BI Rate |
-| `models/np_inflasi.pkl` | NeuralProphet Inflasi |
-| `models/np_kurs_usd.pkl` | NeuralProphet Kurs USD |
-| `models/sarimax_fc.pkl` | SARIMAX per-bank (~312 MB) |
-| `data/processed/master_panel.parquet` | Panel data historis |
-| `data/predictions/forecast_6m.parquet` | Hasil prediksi 6 bulan |
-
-> **Catatan penting:**
-> - File `sarimax_fc.pkl` (~312 MB) dan `sarimax.pkl` (~26 MB) melebihi batas LFS HF Spaces (1 GB total).
-> - Gunakan **HF Dataset repository** terpisah untuk file besar, lalu atur `SPACE_ID` di secrets.
-> - Jangan commit `models/` dan `data/` ke git Space — biarkan di-sync via HF Hub API saat runtime.
-
----
-
 ## 📁 Project Structure
 
 ```
@@ -222,7 +149,7 @@ prediksi-bank-v4/
 | **NeuralProphet**                     | Forecast variabel makro (BI rate, inflasi, kurs) | `np_*.pkl`             |
 | **SARIMAX**                           | Per-bank per-rasio statistical forecasting       | `sarimax_fc.pkl`       |
 
-**Current model version:** `1.1.0` (trained 2026-05-12)  
+**Current model version:** `1.0.0` (trained 2026-05-12)  
 **Forecast horizon:** 6 bulan ke depan (Sep 2026 – Feb 2027)
 
 ---
